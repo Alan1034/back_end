@@ -37,6 +37,18 @@ router.get('/data/population', async function (req, routerRes, next) {
     conn = await MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
     const dbase = conn.db("code_race").collection('personnel')
     var res = await dbase.find({}).toArray();
+    const getdata = (key) => {
+      const someObj={}
+      res.forEach(item => {
+        const thisKey = item[key]
+        if (someObj[`${thisKey}`]) {
+          someObj[`${thisKey}`] = someObj[`${thisKey}`] + 1
+        } else {
+          someObj[`${thisKey}`] = 1
+        }
+      })
+      return someObj
+    }
     const payRank={}
     res.forEach(item=>{
       const { payRankType, payRankLevel } = item
@@ -46,15 +58,6 @@ router.get('/data/population', async function (req, routerRes, next) {
         payRank[`${payRankType}${payRankLevel}`]=1
       }
     })
-    const employ={}
-    res.forEach(item=>{
-      const { employType } = item
-      if (employ[`${employType}`]) {
-        employ[`${employType}`] = employ[`${employType}`]+1
-      }else{
-        employ[`${employType}`]=1
-      }
-    })
     routerRes.send(JSON.stringify({
       ...resData,
       data: {
@@ -62,7 +65,9 @@ router.get('/data/population', async function (req, routerRes, next) {
         male: res.filter(item => (item.gender==="M")).length,
         female: res.filter(item => (item.gender==="F")).length,
         payRank,
-        employ,
+        employ: getdata("employType"),
+        age: getdata("age"),
+        divisionAge: getdata("divisionAge"),
       }
     }));
   } catch (error) {
