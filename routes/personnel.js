@@ -77,4 +77,29 @@ router.get('/data/population', async function (req, routerRes, next) {
   }
 });
 
+router.get('/data/site', async function (req, routerRes, next) {
+  routerRes.header('Access-Control-Allow-Origin', '*');
+  let conn = null;
+  try {
+    conn = await MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
+    const dbase = conn.db("code_race").collection('personnel')
+    var res = await dbase.find({}).toArray();
+    routerRes.send(JSON.stringify({
+      ...resData,
+      data: res.map(item=>{
+        const { staffName, accountSite, siteLng, siteLat } = item 
+      return{
+        staffName,
+        accountSite,
+        siteLng,
+        siteLat,
+      }})
+    }));
+  } catch (error) {
+    console.log("错误：" + error.message);
+  } finally {
+    if (conn != null) conn.close();
+  }
+});
+
 module.exports = router;
