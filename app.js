@@ -10,7 +10,7 @@ var personnelRouter = require('./routes/personnel');
 var app = express();
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join("./", 'views'));
 // app.set('view engine', 'jade');
 //模板类型指定为html
 app.engine('html', ejs.__express)
@@ -23,7 +23,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 //静态地图资源
-app.use(express.static(path.join(__dirname, 'public'), { setHeaders:(res,path,stat)=>{
+app.use(express.static(path.join('./', 'public'), { setHeaders:(res,path,stat)=>{
   res.set({
     'Content-Type': "image/png;charset=UTF8", 
     'Access-Control-Allow-Origin': '*' ,

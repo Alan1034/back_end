@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "nodemon ./bin/www",
+    "pkg": "pkg . --out-path ./build"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
@@ -19,11 +20,10 @@
   },
   "bin": "./bin/www",
   "pkg": {
-    "scripts": [
-      "build/**/*.js"
-    ],
     "assets": [
-      "views/**/*"
+      "./views/**/*",
+      "./public/**/*",
+      "./node_modules/**/*"
     ]
   }
 }
